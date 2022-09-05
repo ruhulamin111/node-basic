@@ -17,7 +17,14 @@ const users = [
     { id: 3, name: 'abu hasem', job: 'senior developer' }
 ]
 app.get('/users', (req, res) => {
-    res.send(users)
+    if (req.query.name) {
+        const search = req.query.name.toLocaleLowerCase();
+        const matched = users.filter(user => user.name.toLocaleLowerCase().includes(search))
+        res.send(matched)
+    } else {
+        res.send(users)
+    }
+
 })
 
 app.get('/user/:id', (req, res) => {
@@ -27,8 +34,10 @@ app.get('/user/:id', (req, res) => {
 })
 
 app.post('/user', (req, res) => {
-    console.log(req);
-    res.send('user send')
+    const user = req.body;
+    user.id = users.length + 1;
+    users.push(user)
+    res.send(user)
 })
 
 
