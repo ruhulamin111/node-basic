@@ -4,6 +4,8 @@ const cors = require('cors');
 const port = process.env.PORT || 5000;
 
 app.use(cors())
+app.use(express.json())
+
 
 app.get('/', (req, res) => {
     res.send('working basic node')
@@ -23,6 +25,15 @@ app.get('/user/:id', (req, res) => {
     const user = users.find(user => user.id == id)
     res.send(user)
 })
+
+app.post('/user', (req, res) => {
+    console.log(req);
+    res.send('user send')
+})
+
+
+
+
 
 app.listen(port, () => {
     console.log('working port', port);
