@@ -45,6 +45,19 @@ async function run() {
             res.send(result)
         })
 
+        app.put('/user/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const updateUser = {
+                $set: {
+                    name: req.body.name,
+                    job: req.body.job,
+                }
+            }
+            const options = { upsert: true }
+            const result = await userCollection.updateOne(filter, updateUser, options)
+            res.send(result)
+        })
 
     }
     finally {
