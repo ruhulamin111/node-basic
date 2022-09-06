@@ -12,63 +12,57 @@ app.use(express.json())
 
 const uri = "mongodb+srv://testuser:0K6jrMCIvYt1hOaM@cluster0.zjrcntk.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
 async function run() {
     try {
         await client.connect();
-        const userCollection = client.db('test').collection('user')
-        const user =
-            { name: 'abu taleb', email: 'at@gmail.com' }
+        // const user = { name: 'abu taleb', email: 'at@gmail.com' }
+        app.post('/user', (req, res) => {
+            const user = req.body;
+            const userCollection = client.db('test').collection('user')
+            const result = userCollection.insertOne(user)
+            res.send('receicve')
+        })
 
-        const result = await userCollection.insertOne(user)
-        console.log('user id:', result.insertedId);
-        console.log('connected db');
     }
     finally {
 
     }
-
 }
 run().catch(console.dir)
-
-
 
 
 app.get('/', (req, res) => {
     res.send('working basic node')
 })
 
-const users = [
-    { id: 1, name: 'abu bakar', job: 'developer' },
-    { id: 2, name: 'abu kuddus', job: 'junior developer' },
-    { id: 3, name: 'abu hasem', job: 'senior developer' }
-]
-app.get('/users', (req, res) => {
-    if (req.query.name) {
-        const search = req.query.name.toLocaleLowerCase();
-        const matched = users.filter(user => user.name.toLocaleLowerCase().includes(search))
-        res.send(matched)
-    } else {
-        res.send(users)
-    }
+// const users = [
+//     { id: 1, name: 'abu bakar', job: 'developer' },
+//     { id: 2, name: 'abu kuddus', job: 'junior developer' },
+//     { id: 3, name: 'abu hasem', job: 'senior developer' }
+// ]
+// app.get('/users', (req, res) => {
+//     if (req.query.name) {
+//         const search = req.query.name.toLocaleLowerCase();
+//         const matched = users.filter(user => user.name.toLocaleLowerCase().includes(search))
+//         res.send(matched)
+//     } else {
+//         res.send(users)
+//     }
 
-})
+// })
 
-app.get('/user/:id', (req, res) => {
-    const id = req.params.id;
-    const user = users.find(user => user.id == id)
-    res.send(user)
-})
+// app.get('/user/:id', (req, res) => {
+//     const id = req.params.id;
+//     const user = users.find(user => user.id == id)
+//     res.send(user)
+// })
 
-app.post('/user', (req, res) => {
-    const user = req.body;
-    user.id = users.length + 1;
-    users.push(user)
-    res.send(user)
-})
-
-
-
+// app.post('/user', (req, res) => {
+//     const user = req.body;
+//     user.id = users.length + 1;
+//     users.push(user)
+//     res.send(user)
+// })
 
 
 app.listen(port, () => {
