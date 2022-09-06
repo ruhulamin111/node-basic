@@ -12,15 +12,23 @@ app.use(express.json())
 
 const uri = "mongodb+srv://testuser:0K6jrMCIvYt1hOaM@cluster0.zjrcntk.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
 async function run() {
     try {
         await client.connect();
-        // const user = { name: 'abu taleb', email: 'at@gmail.com' }
-        app.post('/user', (req, res) => {
+        const userCollection = client.db('test').collection('user')
+
+        app.post('/user', async (req, res) => {
             const user = req.body;
-            const userCollection = client.db('test').collection('user')
-            const result = userCollection.insertOne(user)
-            res.send('receicve')
+            const result = await userCollection.insertOne(user)
+            res.send({ result: 'success ' })
+        })
+
+        app.get('/user', async (req, res) => {
+            const query = {}
+            const cursor = userCollection.find(query)
+            const users = await cursor.toArray()
+            res.send(users)
         })
 
     }
