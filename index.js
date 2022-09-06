@@ -1,3 +1,4 @@
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express');
 const app = express()
 const cors = require('cors');
@@ -5,6 +6,32 @@ const port = process.env.PORT || 5000;
 
 app.use(cors())
 app.use(express.json())
+
+// testuser
+// 0K6jrMCIvYt1hOaM
+
+const uri = "mongodb+srv://testuser:0K6jrMCIvYt1hOaM@cluster0.zjrcntk.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+async function run() {
+    try {
+        await client.connect();
+        const userCollection = client.db('test').collection('user')
+        const user =
+            { name: 'abu taleb', email: 'at@gmail.com' }
+
+        const result = await userCollection.insertOne(user)
+        console.log('user id:', result.insertedId);
+        console.log('connected db');
+    }
+    finally {
+
+    }
+
+}
+run().catch(console.dir)
+
+
 
 
 app.get('/', (req, res) => {
